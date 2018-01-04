@@ -14,7 +14,11 @@ Determine programatically C from C++ as well as various versions
         return sizeof(T); 
     } 
 
-    int main() { printf( "%d\n", size() ); }
+    int main() { 
+        printf( "%d\n", size() );     // sizeof(int) in C and sizeof(struct T) in C++
+        
+        return 0 ;
+    }
     ```
 
 - Character literals are treated different in C and C++. An *integer character constant* has type **int** in C and a *character lterals* with a single char has type **char**. So the following code will likely produce **4** for C and **1** for C++
@@ -23,9 +27,37 @@ Determine programatically C from C++ as well as various versions
     #include<stdio.h>
     int main()
     {
-       printf("%zu",sizeof('a'));
+       printf("%zu",sizeof('a'));    // sizeof(int) in C and sizeof(char) in C++
        return 0;
     }
+    ```
+    
+- C90 does not have **//** style comments, we can differentiate C90 from C99, C11 and C++:
+
+    ```cpp
+    #include <stdio.h>
+
+    int main() {
+       int i = 2 //**/2
+        ;
+        printf( "%d\n", i ) ;    // 1 in C90
+                                 // 2 in C99, C11 and C++
+        return 0 ;
+    }
+    ```
+    
+- K&R C used the *unsigned preserving* approach to integer promotions, which means when we mix unsigned and signed integers they are promoted to *unsigned*. Where as ANSI C and C++ use *value preserving* approach, which means when mixing *signed* and *unsigned* integers the are promoted to *int* if *int* can represent all values. 
+
+    ```cpp
+    #include <stdio.h>
+
+    int main() {
+       if( (unsigned char)1 > -1 ) {    // false for K&R C
+                                        // true for ANSI C and C++
+           printf("yes\n" ) ;  
+       } 
+    }
+
     ```
 
 - The Stackoverflow question [Can C++ code be valid in both C++03 and C++11 but do different things?](https://stackoverflow.com/q/23047198/1708801) contains several examples of code that generate different results for C++03 and C++11:
@@ -40,7 +72,7 @@ Determine programatically C from C++ as well as various versions
         {
            const char *s = u8"def";
     
-           printf( "%s\n", s ) ;
+           printf( "%s\n", s ) ;     // abcdef in C++03 and abc in C++11
            return 0;
         }
         ```
@@ -60,7 +92,9 @@ Determine programatically C from C++ as well as various versions
         };
         static int const c = 4;
         int main() {
-          std::cout << (Y<X<1> >::c >::c>::c) << '\n';
-          std::cout << (Y<X< 1>>::c >::c>::c) << '\n';
+          std::cout << (Y<X<1> >::c >::c>::c) << '\n';  // 0 in C++03 
+                                                        // 0 in C++11
+          std::cout << (Y<X< 1>>::c >::c>::c) << '\n';  // 3 in C++03
+                                                        // 0 in C++11
         }
         ```
