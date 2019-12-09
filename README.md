@@ -2,6 +2,17 @@
 
 Determine programatically C from C++ as well as various versions
 
+- In C the comma operator [forces an array-to-pointer conversion](https://t.co/jFGCC1PtPv) while in C++ the result of the comma operator is the [same value type as the RHS](https://t.co/tAcPqto738):
+
+```cpp
+int f() {
+ char arr[100];
+ return sizeof(0, arr); // returns 8 in C and 100 in C++
+}
+```
+
+I used this example in a [#CppPolls](https://twitter.com/shafikyaghmour/status/1193787548176248832)
+
 - C uses struct, union and enum tags as a primitive form of namespace [see reference](https://stackoverflow.com/a/21793332/1708801). So the following code will give sizeof int for C and sizeof struct T for C++
 
     ```cpp
