@@ -112,18 +112,18 @@ Determine programatically C from C++ as well as various versions
 
 - How to tell C++20 from previous versions of C++. In C++20  introduced the spaceship operator <=> (🛸) and part of this change was rewritten candidates for equality and others see [\[over.match.oper\]p3.4](http://eel.is/c++draft/over.match.oper#3.4). The following code will print `0` in C++20 and `1` in previous versions of C++:
 
-```
-#include <iostream>
+    ```
+    #include <iostream>
 
-struct A {
- operator int() {return 1;}
-};
-bool operator==(A, int){return 0;}
+    struct A {
+     operator int() {return 1;}
+    };
+    bool operator==(A, int){return 0;}
 
-What is the result of:
+    What is the result of:
 
-int main() {
-   std::cout <<(1 == A{})<<"\n";
-}
+    int main() {
+       std::cout <<(1 == A{})<<"\n";
+    }
 
-```
+    ```
