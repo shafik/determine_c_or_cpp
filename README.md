@@ -123,7 +123,8 @@ Determine programatically C from C++ as well as various versions
     What is the result of:
 
     int main() {
-       std::cout <<(1 == A{})<<"\n";
+       std::cout <<(1 == A{})<<"\n"; // 0 in C++20
+                                     // 1 in previous versions of C++
     }
 
     ```
