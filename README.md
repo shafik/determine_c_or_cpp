@@ -57,6 +57,24 @@ Determine programatically C from C++ as well as various versions
     }
     ```
     
+- C99 *if statement* implicitly defines a block scope above and below it (h/t [this tweet](https://twitter.com/rep_stosq_void/status/1370123144514699274):
+
+   ```cpp
+    #include <stdio.h>
+
+    struct s { long long m; };
+
+    int main(void) {
+      int x = 0;
+      if (x)
+        x = sizeof(struct s { char c;});
+      else  
+        printf("%zu\n", sizeof (struct s));   // 1 in C89
+                                              // 8 in C99, assuming LP64
+      return 0;
+    }
+   ```
+    
 - K&R C used the *unsigned preserving* approach to integer promotions, which means when we mix unsigned and signed integers they are promoted to *unsigned*. Where as ANSI C and C++ use *value preserving* approach, which means when mixing *signed* and *unsigned* integers the are promoted to *int* if *int* can represent all values. 
 
     ```cpp
