@@ -88,6 +88,16 @@ Determine programatically C from C++ as well as various versions
     }
 
     ```
+    
+- In C++ *true* and *false* are treated differently during preprocessing then the rest of the keywords and [are not replaced with 0](http://eel.is/c++draft/cpp#cond-11) and [subepxressions of type *bool* are subject to integral promotions](http://eel.is/c++draft/cpp#cond-12.sentence-8). In C *true* and *false* are not keywords but are macros with values `1` and `0` respetively if [`stdbool.h` is included](https://port70.net/~nsz/c/c11/n1570.html#7.18):
+
+    ```cpp
+    #if true
+    #define ISC 0
+    #else
+    #define ISC 1
+    #endif
+    ```
 
 - The Stackoverflow question [Can C++ code be valid in both C++03 and C++11 but do different things?](https://stackoverflow.com/q/23047198/1708801) contains several examples of code that generate different results for C++03 and C++11:
     - New kinds of string literals [...] Specifically, macros named R, u8, u8R, u, uR, U, UR, or LR will not be expanded when adjacent to a string literal but will be interpreted as part of the string literal. The following code will print **abcdef** in C++03 and **abc** in C++11:
@@ -127,10 +137,21 @@ Determine programatically C from C++ as well as various versions
                                                         // 0 in C++11
         }
         ```
+        
+- We can identify if we are C++17 and greater by attempting to use trigrpahs, [which were removed](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4086.html) in [C++17](http://eel.is/c++draft/diff.cpp14.lex#1):
+
+    ```cpp
+    int iscpp17orGreater(){
+      //??/
+      return 1; // trigraph on previous line will be ignored in C++17
+      return 0; // trigraphs two lines above will form continuation and comment out the previous line
+    }
+    ```
+        
 
 - How to tell C++20 from previous versions of C++. In C++20  introduced the spaceship operator <=> (🛸) and part of this change was rewritten candidates for equality and others see [\[over.match.oper\]p3.4](http://eel.is/c++draft/over.match.oper#3.4). The following code will print `0` in C++20 and `1` in previous versions of C++:
 
-    ```
+    ```cpp
     #include <iostream>
 
     struct A {
