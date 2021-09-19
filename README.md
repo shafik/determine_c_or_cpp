@@ -167,3 +167,15 @@ Determine programatically C from C++ as well as various versions
     }
 
     ```
+
+- C++14 added the [single quote as a digit seperator](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3781.pdf) this means that prior to C++14 [a comma in single quotes would be treated as a seperator in macros but C++14 onwards would not](http://eel.is/c++draft/diff.cpp11#lex-1). Assuming we can indentify C++03, C++17 and C++20 we can use the following method to then differentiate C++11 and C++14. 
+
+    ```cpp
+    #define M(x, ...) __VA_ARGS__
+    int x[2] = { M(1'2,3'4, 5) };
+    // macro CPP03 is 1 is we are C++03
+    // macro CPP17 is 1 if we are C++17
+    // macro CPP20 is 1 is we are C++20
+    int CPP14 = x[0] == 34 && !CPP17 && !CPP20;
+    int CPP11 = x[0] == 5 && !CPP03 ;
+    ```
