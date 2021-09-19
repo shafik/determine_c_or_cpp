@@ -179,3 +179,83 @@ Determine programatically C from C++ as well as various versions
     int CPP14 = x[0] == 34 && !CPP17 && !CPP20;
     int CPP11 = x[0] == 5 && !CPP03 ;
     ```
+
+- We can combine this together into one program to detect both C and C++ and their respective versions. Note: K&R C did not have *const* so this needs some modifying to be portable for that case:
+
+```cpp
+#if true
+#define ISC 0
+#else
+#define ISC 1
+#endif
+
+#include <stdio.h>
+
+#define u8 "abc"
+
+const int KandRC = (((unsigned char)1 > -1) == 0);
+const int comment = 2 //**/2
+    ;
+const int C90 = (comment == 1? 1 : 0) && ISC;
+const int C11 = 
+    ISC && (sizeof(u8"def") == 4);
+const int C99 = !C11 && !C90 && ISC;
+
+#if ISC
+int CPP03 = 0;
+int CPP11 = 0;
+int CPP14 = 0;
+int CPP17 = 0;
+int CPP20 = 0;
+#else
+template<int I> struct X {
+  static int const c = 2;
+};
+template<> struct X<0> {
+  typedef int c;
+};
+template<typename T> struct Y {
+  static int const c = 3;
+};
+static int const c = 4;
+int CPP03 = (Y<X< 1>>::c >::c>::c == 3);
+
+struct A {
+ operator int() {return 1;}
+};
+bool operator==(A, int){return 0;}
+
+int iscpp17(){
+    //??/
+    return 1; // trigraph on previous line will be ignored in C++17
+    return 0; // trigraphs two lines above will form continuation and comment out the previous line
+}
+
+int isCPP20() {return !(1 == A());}
+
+int CPP20 = isCPP20();
+int CPP17 = iscpp17() && !CPP20;
+
+#define M(x, ...) __VA_ARGS__
+int x[2] = { M(1'2,3'4, 5) };
+int CPP14 = x[0] == 34 && !CPP17 && !CPP20;
+int CPP11 = x[0] == 5 && !CPP03 ;
+#endif
+
+
+int main()
+{
+   printf( "%s\n", (ISC ? "C" : "C++"));
+   printf( "%s\n", (CPP03 ? "C++03" : "not C++03"));
+   printf( "%s\n", (CPP11 ? "C++11" : "not C++11"));
+   printf( "%s\n", (CPP14 ? "C++14" : "not C++14"));
+   printf( "%s\n", (CPP17 ? "C++17" : "not C++17"));
+   printf( "%s\n", (CPP20 ? "C++20" : "not C++20"));
+   printf( "%s\n", (C90 ? "C90" : "not c90"));
+   printf( "%s\n", (C99 ? "C99" : "not c99"));
+   printf( "%s\n", (C11 ? "C11" : "not c11"));
+   printf( "%s\n", (KandRC ? "K&R C" : "not K&R C"));
+
+   return 0;
+}
+```
