@@ -100,7 +100,7 @@ Determine programatically C from C++ as well as various versions
     ```
 
 - The Stackoverflow question [Can C++ code be valid in both C++03 and C++11 but do different things?](https://stackoverflow.com/q/23047198/1708801) contains several examples of code that generate different results for C++03 and C++11:
-    - New kinds of string literals [...] Specifically, macros named R, u8, u8R, u, uR, U, UR, or LR will not be expanded when adjacent to a string literal but will be interpreted as part of the string literal. The following code will print **abcdef** in C++03 and **abc** in C++11:
+    - New kinds of string literals [...] Specifically, macros named R, u8, u8R, u, uR, U, UR, or LR will not be expanded when adjacent to a string literal but will be interpreted as part of the string literal. The following code will print **abcdef** in C++03 and **def** in C++11:
 
         ```cpp
         #include <cstdio>
