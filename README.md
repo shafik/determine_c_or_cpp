@@ -111,7 +111,7 @@ Determine programatically C from C++ as well as various versions
         {
            const char *s = u8"def";
     
-           printf( "%s\n", s ) ;     // abcdef in C++03 and abc in C++11
+           printf( "%s\n", s ) ;     // abcdef in C++03 and def in C++11
            return 0;
         }
         ```
